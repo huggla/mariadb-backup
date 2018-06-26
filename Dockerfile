@@ -12,12 +12,8 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.7-r0.
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_FINAL_COMMAND="/usr/sbin/crond -f -d 8" \
-    VAR_BACKUP_DIR="/pgbackup" \
-    VAR_PORT="5432" \
-    VAR_FORMAT="directory" \
-    VAR_JOBS="1" \
-    VAR_COMPRESS="6" \
-    VAR_DUMP_GLOBALS="yes" \
+    VAR_BACKUP_DIR="/mysqlbackup" \
+    VAR_PORT="3306" \
     VAR_DELETE_DUPLICATES="yes"
 
 USER starter
