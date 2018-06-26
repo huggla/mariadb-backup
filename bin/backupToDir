@@ -24,49 +24,25 @@ commandForBackupToDir(){
    do
       database="$(trim $database)"
       file="$backupDir/$database"
-      dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file database"
-      eval "format=\$VAR_$database_format"
-      if [ -z "$format" ]
+      dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file"
+  
+      eval "drop=\$VAR_$database_dropdb"
+      if [ "$drop" != "no" ]
       then
-         format=$VAR_FORMAT
-      fi
-      dumpCmd="$dumpCmd --format=$format"
-      if [ "$format" == "directory" ]
-      then
-         dumpCmd="$dumpCmd --compress=$VAR_COMPRESS"
-         eval "jobs=\$VAR_$database_jobs"
-         if [ -z "$jobs" ]
+         if [ "$drop" == "yes" ] || [ "$VAR_DROP" == "yes" ]
          then
-            jobs=$VAR_JOBS
-         fi
-         dumpCmd="$dumpCmd --jobs=$jobs"
-      elif [ "$format" == "plain" ]
-      then
-         dumpCmd="$dumpCmd.sql --compress=$VAR_COMPRESS"
-      fi
-      eval "clean=\$VAR_$database_clean"
-      if [ "$clean" != "no" ]
-      then
-         if [ "$clean" == "yes" ] || [ "$VAR_CLEAN" == "yes" ]
-         then
-            dumpCmd="$dumpCmd --clean"
+            dumpCmd="$dumpCmd --add-drop-trigger"
          fi
       fi
-      if [ "$VAR_SCHEMA_ONLY" == "yes" ]
+      eval "nodata=\$VAR_$database_nodata"
+      if [ "$nodata" != "no" ]
       then
-         dumpCmd="$dumpCmd --schema-only"
+         if [ "$nodata" == "yes" ] || [ "$VAR_NODATA" == "yes" ]
+         then
+            dumpCmd="$dumpCmd --no-data"
+         fi
       fi
-      eval "xschemas=\$VAR_$database_excludeschemas"
-      for xschema in $xschemas
-      do
-         xschema="$(trim $xschema)"
-         dumpCmd="$dumpCmd --exclude-schema=$xschema"
-      done
-      eval "schemas=\$VAR_$database_schemas"
-      if [ -n "$schemas" ] && [ "$VAR_BLOBS" != "no" ]
-      then
-         dumpCmd="$dumpCmd --blobs"
-      fi
+
       for schema in $schemas
       do
          schema="$(trim schema)"
