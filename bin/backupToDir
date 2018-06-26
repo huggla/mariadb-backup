@@ -2,10 +2,6 @@
 cd /
 set -e +a +m +s +i -f
 
-backupGlobalsToFile(){
-   runBinCmdAsLinuxUser "/usr/local/bin/pg_dumpall --host=$VAR_HOST --port=$VAR_PORT --username=$VAR_LINUX_USER --globals-only | /bin/gzip -c > \"$1\""
-}
-
 commandForBackupToDir(){
    local backupDir=$1
    local IFS=$(echo -en "\n\b,")
@@ -28,7 +24,7 @@ commandForBackupToDir(){
    do
       database="$(trim $database)"
       file="$backupDir/$database"
-      dumpCmd="$dumpCmd $delimiter /usr/local/bin/pg_dump --host=$VAR_HOST --port=$VAR_PORT --username=$VAR_LINUX_USER --dbname=$database --file=$file"
+      dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file database"
       eval "format=\$VAR_$database_format"
       if [ -z "$format" ]
       then
@@ -141,10 +137,6 @@ backupDir="$1"
 readEnvironmentVars
 /bin/mkdir -m 700 -p "$backupDir"
 /bin/chown $VAR_LINUX_USER "$backupDir"
-if [ "$VAR_DUMP_GLOBALS" == "yes" ]
-then
-   backupGlobalsToFile "$backupDir/postgresql-globals.sql.gz"
-fi
 backupCmd="$(commandForBackupToDir "$backupDir")"
 if [ -n "$backupCmd" ]
 then
