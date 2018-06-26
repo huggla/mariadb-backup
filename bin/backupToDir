@@ -42,23 +42,23 @@ commandForBackupToDir(){
             dumpCmd="$dumpCmd --no-data"
          fi
       fi
-
-      for schema in $schemas
+      eval "igntables=\$VAR_$database_igntables"
+      for table in $igntables
       do
-         schema="$(trim schema)"
-         dumpCmd="$dumpCmd --schema=$schema"
-         eval "xtables=\$VAR_$database_$schema_excludetables"
-         for xtable in $xtables
-         do
-            xtable="$(trim $xtable)"
-            dumpCmd="$dumpCmd --exclude-table=$xtable"
-         done
-         eval "tables=\$VAR_$database_$schema_tables"
-         for table in $tables
-         do
-            table="$(trim $table)"
-            dumpCmd="$dumpCmd --table=$table"
-         done
+         table="$(trim table)"
+         dumpCmd="$dumpCmd --ignore-table=$table"
+      done
+      dumpCmd="$dumpCmd $database"
+      eval "tables=\$VAR_$database_tables"
+      for table in $tables
+      do
+         table="$(trim table)"
+         dumpCmd="$dumpCmd $table"
+      done
+      for table in $VAR_TABLES
+      do
+         table="$(trim table)"
+         dumpCmd="$dumpCmd $table"
       done
    done
    echo "$dumpCmd"
