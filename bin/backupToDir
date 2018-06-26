@@ -20,47 +20,51 @@ commandForBackupToDir(){
    local xtable=""
    local tables=""
    local table=""
-   for database in $VAR_DATABASES
-   do
-      database="$(trim $database)"
-      file="$backupDir/$database"
-      dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file"
-  
-      eval "drop=\$VAR_$database_dropdb"
-      if [ "$drop" != "no" ]
-      then
-         if [ "$drop" == "yes" ] || [ "$VAR_DROP" == "yes" ]
+   if [ -z "$VAR_DATABASES" ]
+   then
+      dumpCmd="/usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$backupDir --all-databases"
+   else
+      for database in $VAR_DATABASES
+      do
+         database="$(trim $database)"
+         file="$backupDir/$database"
+         dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file"
+         eval "drop=\$VAR_$database_dropdb"
+         if [ "$drop" != "no" ]
          then
-            dumpCmd="$dumpCmd --add-drop-trigger"
+            if [ "$drop" == "yes" ] || [ "$VAR_DROP" == "yes" ]
+            then
+               dumpCmd="$dumpCmd --add-drop-trigger"
+            fi
          fi
-      fi
-      eval "nodata=\$VAR_$database_nodata"
-      if [ "$nodata" != "no" ]
-      then
-         if [ "$nodata" == "yes" ] || [ "$VAR_NODATA" == "yes" ]
+         eval "nodata=\$VAR_$database_nodata"
+         if [ "$nodata" != "no" ]
          then
-            dumpCmd="$dumpCmd --no-data"
+            if [ "$nodata" == "yes" ] || [ "$VAR_NODATA" == "yes" ]
+            then
+               dumpCmd="$dumpCmd --no-data"
+            fi
          fi
-      fi
-      eval "igntables=\$VAR_$database_igntables"
-      for table in $igntables
-      do
-         table="$(trim table)"
-         dumpCmd="$dumpCmd --ignore-table=$table"
+         eval "igntables=\$VAR_$database_igntables"
+         for table in $igntables
+         do
+            table="$(trim table)"
+            dumpCmd="$dumpCmd --ignore-table=$table"
+         done
+         dumpCmd="$dumpCmd $database"
+         eval "tables=\$VAR_$database_tables"
+         for table in $tables
+         do
+            table="$(trim table)"
+            dumpCmd="$dumpCmd $table"
+         done
+         for table in $VAR_TABLES
+         do
+            table="$(trim table)"
+            dumpCmd="$dumpCmd $table"
+         done
       done
-      dumpCmd="$dumpCmd $database"
-      eval "tables=\$VAR_$database_tables"
-      for table in $tables
-      do
-         table="$(trim table)"
-         dumpCmd="$dumpCmd $table"
-      done
-      for table in $VAR_TABLES
-      do
-         table="$(trim table)"
-         dumpCmd="$dumpCmd $table"
-      done
-   done
+   fi
    echo "$dumpCmd"
 }
 
