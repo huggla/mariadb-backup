@@ -1,0 +1,160 @@
+#!/bin/sh
+cd /
+set -e +a +m +s +i -f
+
+backupGlobalsToFile(){
+   runBinCmdAsLinuxUser "/usr/local/bin/pg_dumpall --host=$VAR_HOST --port=$VAR_PORT --username=$VAR_LINUX_USER --globals-only | /bin/gzip -c > \"$1\""
+}
+
+commandForBackupToDir(){
+   local backupDir=$1
+   local IFS=$(echo -en "\n\b,")
+   local database=""
+   local dumpCmd="find \"$backupDir/\" -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;"
+   local delimiter='&&'
+   local format=""
+   local file=""
+   local jobs=""
+   local clean=""
+   local xschemas=""
+   local xschema=""
+   local schemas=""
+   local schema=""
+   local xtables=""
+   local xtable=""
+   local tables=""
+   local table=""
+   for database in $VAR_DATABASES
+   do
+      database="$(trim $database)"
+      file="$backupDir/$database"
+      dumpCmd="$dumpCmd $delimiter /usr/local/bin/pg_dump --host=$VAR_HOST --port=$VAR_PORT --username=$VAR_LINUX_USER --dbname=$database --file=$file"
+      eval "format=\$VAR_$database_format"
+      if [ -z "$format" ]
+      then
+         format=$VAR_FORMAT
+      fi
+      dumpCmd="$dumpCmd --format=$format"
+      if [ "$format" == "directory" ]
+      then
+         dumpCmd="$dumpCmd --compress=$VAR_COMPRESS"
+         eval "jobs=\$VAR_$database_jobs"
+         if [ -z "$jobs" ]
+         then
+            jobs=$VAR_JOBS
+         fi
+         dumpCmd="$dumpCmd --jobs=$jobs"
+      elif [ "$format" == "plain" ]
+      then
+         dumpCmd="$dumpCmd.sql --compress=$VAR_COMPRESS"
+      fi
+      eval "clean=\$VAR_$database_clean"
+      if [ "$clean" != "no" ]
+      then
+         if [ "$clean" == "yes" ] || [ "$VAR_CLEAN" == "yes" ]
+         then
+            dumpCmd="$dumpCmd --clean"
+         fi
+      fi
+      if [ "$VAR_SCHEMA_ONLY" == "yes" ]
+      then
+         dumpCmd="$dumpCmd --schema-only"
+      fi
+      eval "xschemas=\$VAR_$database_excludeschemas"
+      for xschema in $xschemas
+      do
+         xschema="$(trim $xschema)"
+         dumpCmd="$dumpCmd --exclude-schema=$xschema"
+      done
+      eval "schemas=\$VAR_$database_schemas"
+      if [ -n "$schemas" ] && [ "$VAR_BLOBS" != "no" ]
+      then
+         dumpCmd="$dumpCmd --blobs"
+      fi
+      for schema in $schemas
+      do
+         schema="$(trim schema)"
+         dumpCmd="$dumpCmd --schema=$schema"
+         eval "xtables=\$VAR_$database_$schema_excludetables"
+         for xtable in $xtables
+         do
+            xtable="$(trim $xtable)"
+            dumpCmd="$dumpCmd --exclude-table=$xtable"
+         done
+         eval "tables=\$VAR_$database_$schema_tables"
+         for table in $tables
+         do
+            table="$(trim $table)"
+            dumpCmd="$dumpCmd --table=$table"
+         done
+      done
+   done
+   echo "$dumpCmd"
+}
+
+recursiveDeleteFileDuplicates(){
+   local -
+   local dir="."
+   local dirName=""
+   if [ -n "$1" ]
+   then
+      dir=$1
+   else
+      dirName="$(/usr/bin/basename "$(/bin/pwd)")"
+      if [ ! -e "$dir/latest" ] || [ "$(/usr/bin/readlink "$dir/latest")" == "./$dirName" ]
+      then
+         return
+      fi
+   fi
+   local backupFile=""
+   set +f
+   for backupFile in "$dir/"*
+   do
+      if [ -f "$backupFile" ]
+      then
+         if [ ! "$(/usr/bin/cmp "$backupFile" "../latest/$backupFile")" ]
+         then
+            /bin/rm "../latest/$backupFile"
+         fi
+      elif [ -d "$backupFile" ]
+      then
+         recursiveDeleteFileDuplicates "$backupFile"
+      fi
+   done
+}
+
+linkDirAsLatest(){
+   local backupDir=$1
+   cd "$backupDir/.."
+   rm -f ./latest
+   /bin/ln -s "./$(/usr/bin/basename "$backupDir")" "./latest"
+}
+
+[ $(type -t readEnvironmentVars) ] || . /start/functions/readEnvironmentVars
+[ $(type -t runBinCmdAsLinuxUser) ] || . /start/functions/runBinCmdAsLinuxUser
+[ $(type -t execCmdAsLinuxUser) ] || . /start/functions/execCmdAsLinuxUser
+[ $(type -t trim) ] || . /start/functions/trim
+
+#-----------------------------------------------------------------------------
+
+backupDir="$1"
+readEnvironmentVars
+/bin/mkdir -m 700 -p "$backupDir"
+/bin/chown $VAR_LINUX_USER "$backupDir"
+if [ "$VAR_DUMP_GLOBALS" == "yes" ]
+then
+   backupGlobalsToFile "$backupDir/postgresql-globals.sql.gz"
+fi
+backupCmd="$(commandForBackupToDir "$backupDir")"
+if [ -n "$backupCmd" ]
+then
+   set +f
+   eval "$backupCmd"
+   set -f
+   if [ "$VAR_DELETE_DUPLICATES" == "yes" ] && [ -d "$backupDir/../latest" ]
+   then
+      cd "$backupDir"
+      recursiveDeleteFileDuplicates
+   fi
+   linkDirAsLatest "$backupDir"
+fi
