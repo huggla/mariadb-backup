@@ -1,5 +1,5 @@
 FROM huggla/mariadb as mariadb
-FROM huggla/alpine:20180614-edge as tmp
+FROM huggla/alpine:20180627-edge as tmp
 
 USER root
 
@@ -11,7 +11,7 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.7-r0.
  && rm -rf /mariadb-apks \
  && ln /usr/bin/mysqldump /usr/local/bin/mysqldump
 
-FROM huggla/alpine:20180614-edge
+FROM huggla/alpine:20180627-edge
 
 COPY --from=tmp / / \
 
