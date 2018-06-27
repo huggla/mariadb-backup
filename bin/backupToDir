@@ -22,13 +22,13 @@ commandForBackupToDir(){
    local table=""
    if [ -z "$VAR_DATABASES" ]
    then
-      dumpCmd="/usr/local/bin/mysqldump --defaults-file=/run/mysqldumpPw --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --all-databases"
+      dumpCmd="/usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --all-databases"
    else
       for database in $VAR_DATABASES
       do
          database="$(trim $database)"
          file="$backupDir/$database"
-         dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --defaults-file=/run/mysqldumpPw --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file"
+         dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --host=$VAR_HOST --port=$VAR_PORT --user=$VAR_LINUX_USER --tab=$file"
          eval "drop=\$VAR_$database_dropdb"
          if [ "$drop" != "no" ]
          then
