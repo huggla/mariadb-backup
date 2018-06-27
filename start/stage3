@@ -7,6 +7,8 @@
 
 if [ "$isFirstRun" == "true" ]
 then
+   pwFile="$(makePwFileForUser $VAR_LINUX_USER)"
+   eval "\$VAR_password_file_$VAR_LINUX_USER=$pwFile"
    writeCrontab
 fi
 execCmd "$VAR_FINAL_COMMAND"
