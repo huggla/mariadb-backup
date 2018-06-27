@@ -13,7 +13,7 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.7-r0.
 
 FROM huggla/alpine:20180627-edge
 
-COPY --from=tmp / / \
+COPY --from=tmp / /
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_FINAL_COMMAND="/usr/sbin/crond -f -d 8" \
