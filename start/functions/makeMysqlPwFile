@@ -1,4 +1,7 @@
 makeMysqlPwFile(){
-   local pwFile="$(makePwFileForUser $VAR_LINUX_USER)"
-   mv "$pwFile" /run/mysqlPw
+   local pw="$(makePwForUser $VAR_LINUX_USER)"
+   {
+      echo "[mysqldump]"
+      echo "password=$pw"
+   }  > /run/mysqldumpPw
 }
