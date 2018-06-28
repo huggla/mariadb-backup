@@ -19,6 +19,6 @@ COPY ./bin /usr/local/bin
 RUN ln /usr/bin/mysqldump /usr/local/bin/mysqldump
 
 ENV VAR_LINUX_USER="mysql" \
-    VAR_PORT="3306" \
+    VAR_PORT="3306"
 
 USER starter
