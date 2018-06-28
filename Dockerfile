@@ -15,7 +15,7 @@ FROM huggla/alpine:20180627-edge
 
 USER root
 
-COPY --from=tmp / /
+COPY --from=tmp /usr/bin /usr/bin
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_FINAL_COMMAND="/usr/sbin/crond -f -d 8" \
