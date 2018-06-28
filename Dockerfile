@@ -8,7 +8,7 @@ COPY --from=mariadb /mariadb-apks /mariadb-apks
 RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.7-r0.apk /mariadb-apks/mariadb-client-10.3.7-r0.apk \
  && rm -rf /mariadb-apks
 
-FROM huggla/backup-alpine:20180627-edge
+FROM huggla/backup-alpine
 
 USER root
 
