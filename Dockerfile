@@ -14,7 +14,7 @@ FROM huggla/alpine:20180627-edge
 
 USER root
 
-COPY --from=tmp / /
+COPY --from=tmp /usr/bin /usr/bin
 
 RUN ln /usr/bin/mysqldump /usr/local/bin/mysqldump
 
