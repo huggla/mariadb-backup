@@ -17,8 +17,8 @@ COPY ./start /start
 COPY ./bin /usr/local/bin
 
 RUN apk --no-cache add libressl2.7-libcrypto libressl2.7-libssl \
--#libstdc++ musl ncurses-libs zlib
-- && ln /usr/bin/mysqldump /usr/local/bin/mysqldump
+#libstdc++ musl ncurses-libs zlib
+ && ln /usr/bin/mysqldump /usr/local/bin/mysqldump
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_PORT="3306"
