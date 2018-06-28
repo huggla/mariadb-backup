@@ -8,6 +8,4 @@
 if [ "$isFirstRun" == "true" ]
 then
    makeMysqlPwFile
-   writeCrontab
 fi
-execCmd "$VAR_FINAL_COMMAND"
