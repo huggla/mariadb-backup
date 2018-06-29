@@ -20,6 +20,7 @@ RUN apk --no-cache add libressl2.7-libcrypto libressl2.7-libssl \
  && ln /usr/bin/mysqldump /usr/local/bin/mysqldump
 
 ENV VAR_LINUX_USER="mysql" \
-    VAR_PORT="3306"
+    VAR_PORT="3306" \
+    VAR_SOCKET="/run/mysqld/mysqld.sock"
 
 USER starter
