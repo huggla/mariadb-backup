@@ -12,7 +12,7 @@ FROM huggla/backup-alpine:20180628-edge
 
 USER root
 
-COPY --from=tmp /usr/bin /usr/bin
+COPY --from=tmp /usr/bin/mysqldump /usr/bin/
 COPY ./start /start
 COPY ./bin /usr/local/bin
 
