@@ -1,7 +1,7 @@
 **Note! I use Docker latest tag for development, which means that it isn't allways working. Date tags are stable.**
 
 # mariadb-backup
-A tiny and simple Docker image for backing up Mariadb/Mysql.
+A tiny and simple Docker image for backing up Mariadb/Mysql. It uses mysqldump from Mariadb 10.3.7.
 
 ## Environment variables
 ### pre-set runtime variables
