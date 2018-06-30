@@ -28,7 +28,7 @@ commandForBackupToDir(){
          eval "drop=\$VAR_$database_dropdb"
          if [ "$drop" != "no" ]
          then
-            if [ "$drop" == "yes" ] || [ "$VAR_DROP" == "yes" ]
+            if [ "$drop" == "yes" ] || [ "$VAR_DROPDB" == "yes" ]
             then
                dumpCmd="$dumpCmd --add-drop-trigger"
             fi
