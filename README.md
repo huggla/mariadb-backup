@@ -14,8 +14,8 @@ A tiny and simple Docker image for backing up Mariadb/Mysql.
 ### Other runtime variables
 * VAR_HOST: The database host.
 * VAR_DATABASES: Comma separated list of databases to back up.
-* VAR_CLEAN: Set to "yes" to add cleaning commands to the backup.
-* VAR_&lt;database from VAR_DATABASES&gt;_clean: Like VAR_CLEAN, but limited to named database.
+* VAR_DROP: Set to "yes" to add drop triggers to the backup.
+* VAR_&lt;database from VAR_DATABASES&gt;_drop: Like VAR_DROP, but limited to named database.
 * VAR_&lt;database from VAR_DATABASES&gt;_excludetables: Tables in named database that should not be backed up.
 * VAR_&lt;database from VAR_DATABASES&gt;_tables: Limit back up to these tables in named database.
 * VAR_&lt;name&gt;: Name of backup cron job.
