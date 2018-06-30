@@ -25,10 +25,10 @@ commandForBackupToDir(){
          database="$(trim $database)"
          file="$backupDir/$database"
          dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --host=$VAR_HOST --port=$VAR_PORT --socket=$VAR_SOCKET --user=$VAR_LINUX_USER --tab=$file"
-         eval "drop=\$VAR_$database_dropdb"
+         eval "drop=\$VAR_$database_drop"
          if [ "$drop" != "no" ]
          then
-            if [ "$drop" == "yes" ] || [ "$VAR_DROPDB" == "yes" ]
+            if [ "$drop" == "yes" ] || [ "$VAR_DROP" == "yes" ]
             then
                dumpCmd="$dumpCmd --add-drop-trigger"
             fi
