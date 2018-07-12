@@ -11,11 +11,10 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.8-r0.
  && apk --no-cache add libressl2.7-libcrypto libressl2.7-libssl \
  && tar -cvp -f /installed_files.tar $(apk manifest libressl2.7-libcrypto libressl2.7-libssl | awk -F "  " '{print $2;}') \
  && tar -xvp -f /installed_files.tar -C /rootfs/ \
- && mkdir -p /rootfs/usr/bin \
- && mv /usr/bin/mysqldump /usr/local/bin/ \
- && ln -s /usr/local/bin/mysqldump /usr/bin/ \
- && mv /usr/bin/mysqldump /rootfs/usr/bin/ \
- && mv /usr/local/bin/mysqldump /rootfs/usr/local/bin/
+ && mkdir -p /rootfs/usr/bin /rootfs/usr/local/bin \
+ && mv /usr/bin/mysqldump /rootfs/usr/local/bin/mysqldump \
+ && cd /rootfs/usr/bin \
+ && ln -s ../local/bin/mysqldump mysqldump
 
 FROM huggla/backup-alpine
 
