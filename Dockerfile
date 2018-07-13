@@ -6,7 +6,7 @@ USER root
 COPY --from=stage1 /mariadb-apks /mariadb-apks
 COPY ./rootfs /rootfs
 
-RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common-10.3.8-r0.apk /mariadb-apks/mariadb-client-10.3.8-r0.apk \
+RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common.apk /mariadb-apks/mariadb-client.apk \
  && rm -rf /mariadb-apks \
  && apk --no-cache add libressl2.7-libcrypto libressl2.7-libssl \
  && tar -cvp -f /installed_files.tar $(apk manifest libressl2.7-libcrypto libressl2.7-libssl | awk -F "  " '{print $2;}') \
