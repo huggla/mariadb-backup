@@ -16,7 +16,7 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common.apk /maria
  && cd /rootfs/usr/bin \
  && ln -s ../local/bin/mysqldump mysqldump
 
-FROM huggla/backup-alpine
+FROM huggla/backup-alpine:20180713-edge
 
 COPY --from=stage2 /rootfs /
 
