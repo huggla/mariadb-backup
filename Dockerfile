@@ -1,5 +1,5 @@
-FROM huggla/mariadb as stage1
-FROM huggla/alpine as stage2
+FROM huggla/mariadb:10.3.9 as stage1
+FROM huggla/alpine:20180713-edge as stage2
 
 USER root
 
