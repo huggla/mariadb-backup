@@ -23,3 +23,5 @@ ENV VAR_LINUX_USER="mysql" \
     VAR_SOCKET="/run/mysqld/mysqld.sock"
 
 USER starter
+
+ONBUILD USER root
