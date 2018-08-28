@@ -1,7 +1,5 @@
 FROM huggla/mariadb:10.3.9 as stage1
-FROM huggla/alpine:20180713-edge as stage2
-
-USER root
+FROM huggla/alpine as stage2
 
 COPY --from=stage1 /mariadb-apks /mariadb-apks
 COPY ./rootfs /rootfs
@@ -16,10 +14,12 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common.apk /maria
  && cd /rootfs/usr/bin \
  && ln -s ../local/bin/mysqldump mysqldump
 
-FROM huggla/backup-alpine:20180713-edge
+FROM huggla/backup-alpine
 
 COPY --from=stage2 /rootfs /
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_PORT="3306" \
     VAR_SOCKET="/run/mysqld/mysqld.sock"
+
+USER starter
