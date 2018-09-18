@@ -16,7 +16,7 @@ RUN echo /mariadb-apks >> /etc/apk/repositories \
  && mkdir -p /rootfs/usr/bin /rootfs/usr/local/bin \
  && mv /usr/bin/mysqldump /rootfs/usr/local/bin/mysqldump \
  && cd /rootfs/usr/bin \
- && ln -s ../local/bin/mysqldump mysqldump
+ && ln -fs ../local/bin/mysqldump mysqldump
 
 FROM huggla/backup-alpine
 
