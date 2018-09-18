@@ -8,7 +8,7 @@ COPY ./rootfs /rootfs
 
 RUN echo /mariadb-apks >> /etc/apk/repositories \
  && apk --no-cache --allow-untrusted add $APKS \
- && tar -cvp -f /apk_files.tar $(apk manifest libressl2.7-libcrypto libressl2.7-libssl | awk -F "  " '{print $2;}') \
+ && tar -cvp -f /apk_files.tar $(apk --no-cache --quiet manifest libressl2.7-libcrypto libressl2.7-libssl | awk -F "  " '{print $2;}') \
  && tar -xvp -f /apks_files.tar -C /rootfs/ \
  && rm -rf /mariadb-apks/* \
  && mkdir -p /rootfs/usr/bin /rootfs/usr/local/bin \
