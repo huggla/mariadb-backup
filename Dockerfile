@@ -13,7 +13,7 @@ RUN echo /mariadb-apks >> /etc/apk/repositories \
  && tar -cvp -f /apks_files.tar -T /apks_files.list -C / \
  && tar -xvp -f /apks_files.tar -C /rootfs/ \
  && rm -rf /mariadb-apks/* \
- && mkdir -p /rootfs/usr/bin /rootfs/usr/local/bin \
+ && mkdir -p /rootfs/usr/bin /rootfs/usr/local/bin /rootfs/var/spool/cron/crontabs \
  && mv /usr/bin/mysqldump /rootfs/usr/local/bin/mysqldump \
  && cd /rootfs/usr/bin \
  && ln -fs ../local/bin/mysqldump mysqldump
