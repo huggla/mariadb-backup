@@ -1,5 +1,5 @@
 FROM huggla/mariadb:10.3.9 as stage1
-FROM huggla/alpine as stage2
+FROM huggla/base:20180907-edge as stage2
 
 COPY --from=stage1 /mariadb-apks /mariadb-apks
 COPY ./rootfs /rootfs
