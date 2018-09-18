@@ -7,5 +7,6 @@
 
 if [ "$isFirstRun" == "true" ]
 then
+   tryMakeFile $VAR_SOCKET
    makeMysqlPwFile
 fi
