@@ -1,5 +1,5 @@
 FROM huggla/mariadb:10.3.9 as stage1
-FROM huggla/alpine-slim as stage2
+FROM huggla/alpine-slim:20180921-edge as stage2
 
 ARG APKS="libressl2.7-libcrypto libressl2.7-libssl mariadb-client"
 
@@ -16,7 +16,7 @@ RUN echo /mariadb-apks >> /etc/apk/repositories \
  && cd /rootfs/usr/bin \
  && ln -fs ../local/bin/mysqldump mysqldump
 
-FROM huggla/backup-alpine
+FROM huggla/backup-alpine:20180921-edge
 
 COPY --from=stage2 /rootfs /
 
