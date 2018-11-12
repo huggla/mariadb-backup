@@ -18,13 +18,13 @@ commandForBackupToDir(){
    local table=""
    if [ -z "$VAR_DATABASES" ]
    then
-      dumpCmd="/usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --net_buffer_length=4096 --extended-insert=FALSE --complete-insert=TRUE --host=$VAR_HOST --port=$VAR_PORT --socket=$VAR_SOCKET --user=$VAR_LINUX_USER --all-databases > \"$backupDir/all-databases\""
+      dumpCmd="/usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --net_buffer_length=4096 --max_allowed_packet=4096 --skip-dump-date --host=$VAR_HOST --port=$VAR_PORT --socket=$VAR_SOCKET --user=$VAR_LINUX_USER --all-databases > \"$backupDir/all-databases\""
    else
       for database in $VAR_DATABASES
       do
          database="$(trim $database)"
          file="$backupDir/$database"
-         dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --net_buffer_length=4096 --extended-insert=FALSE --complete-insert=TRUE --host=$VAR_HOST --port=$VAR_PORT --socket=$VAR_SOCKET --user=$VAR_LINUX_USER --tab=$file"
+         dumpCmd="$dumpCmd $delimiter /usr/local/bin/mysqldump --defaults-extra-file=/run/mysqldumpPw --net_buffer_length=4096 --max_allowed_packet=4096 --skip-dump-date --host=$VAR_HOST --port=$VAR_PORT --socket=$VAR_SOCKET --user=$VAR_LINUX_USER --tab=$file"
          eval "drop=\$VAR_$database_drop"
          if [ "$drop" != "no" ]
          then
