@@ -18,7 +18,8 @@ COPY --from=build /imagefs /
 
 ENV VAR_LINUX_USER="mysql" \
     VAR_PORT="3306" \
-    VAR_SOCKET="/run/mysqld/mysqld.sock"
+    VAR_SOCKET="/run/mysqld/mysqld.sock" \
+    VAR_KEEP_CAPS="cap_setgid,cap_setuid"
 
 #---------------Don't edit----------------
 USER starter
