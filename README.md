@@ -32,4 +32,4 @@ VAR_cron_weekly="0 19 \* \* 5"
 VAR_cron_monthly="0 17 1 * *"
 
 ## Capabilities
-Can drop all but CHOWN, FOWNER, SETGID and SETUID.
+Can drop all but SETPCAP, SETGID and SETUID.
