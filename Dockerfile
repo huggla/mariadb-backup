@@ -1,4 +1,4 @@
-ARG TAG="20181108-edge"
+ARG TAG="20181113-edge"
 ARG BASEIMAGE="huggla/backup-alpine:$TAG"
 ARG RUNDEPS="libssl1.1"
 ARG BUILDDEPS="mariadb-client"
