@@ -1,7 +1,7 @@
 **Note! I use Docker latest tag for development, which means that it isn't allways working. Date tags are stable.**
 
 # mariadb-backup
-A tiny (3 MB compressed) and simple Docker image for backing up Mariadb/Mysql. It runs mysqldump from Mariadb (currently 10.3.10) on Alpine Linux.
+A tiny and simple Docker image for backing up Mariadb/Mysql. It runs mysqldump from Mariadb on Alpine Linux.
 
 ## Environment variables
 ### pre-set runtime variables
